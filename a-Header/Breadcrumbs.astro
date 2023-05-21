@@ -1,0 +1,71 @@
+---
+
+const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
+
+const breadcrumbList = currentUrlPath.split("/").slice(1);
+
+breadcrumbList[0] === "posts" &&
+  breadcrumbList.splice(0, 2, `Posts (page ${breadcrumbList[1] || 1})`);
+
+const { pageTitle = 'THIS IS TITLE'} = Astro.props
+---
+
+<div>
+  <h1 class="breadTitle">{pageTitle}</h1>
+
+
+<nav class="flex" aria-label="Breadcrumb">
+  <ol class="inline-flex items-center ">
+    <li class="inline-flex items-center">
+      <a href="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+        <svg aria-hidden="true" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+        Home
+      </a>
+      <svg aria-hidden="true" class="w-7 h-7 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+    </li>
+    
+    {
+      breadcrumbList.map((breadcrumb, index) =>
+        index + 1 === breadcrumbList.length ? (
+          <li>
+            <span class={`${index > 0 ? "lowercase" : "capitalize"}`} aria-current="page">
+            <a href="#" class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"> {breadcrumb}</a>
+            </span>
+          </li>
+
+        ) : (
+        <li aria-current="page">
+          <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+          <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+          <a href={`/${breadcrumb}`}> a {breadcrumb}</a>
+          </span>
+        </li>
+        )
+      )
+    }
+  </ol>
+</nav>
+  <p class="ml-4 mt-2 text-xl leading-8 text-gray-700">is amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh dui, diam eget aliquam. Quisque id at vitae feugiat egestas.</p>
+</div>
+
+
+<style>
+  .breadTitle {
+    @apply my-4 text-3xl font-bold sm:text-4xl;
+  }
+  .breadcrumb {
+    @apply mx-auto w-full text-base font-semibold leading-7 text-indigo-600;
+  }
+  .breadcrumb ul li {
+    @apply inline;
+  }
+  .breadcrumb ul li a {
+    @apply capitalize opacity-70;
+  }
+  .breadcrumb ul li span {
+    @apply opacity-70;
+  }
+  .breadcrumb ul li:not(:last-child) a {
+    @apply hover:opacity-100;
+  }
+</style>

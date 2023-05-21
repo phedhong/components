@@ -1,0 +1,45 @@
+---
+const message = Astro.props.message.toUpperCase();
+let html = '';
+if (Astro.slots.has('default')) {
+  html = await Astro.slots.render('default', [message]);
+}
+
+const { 
+  platform, 
+  username,
+  elementString = 'div' ,
+  Component = Fragment,
+  name = "Astro",
+  // htmlString = '<p>Raw HTML content</p>',
+  classString = 'red',
+  } = Astro.props;
+
+  const basicHTMLTags = ['p', 'div']
+  let htmlString = ''
+  htmlString = (elementString in basicHTMLTags) ?
+                      `<${elementString} />`
+                      : `<${elementString}  > this is test </${elementString}>` 
+
+---
+<a href={`https://www.${platform}.com/${username}`}>{platform}</a>
+
+<Fragment set:html={htmlString} /> 
+<Fragment set:html={html} /> 
+{htmlString}
+
+<slot />
+
+{
+  Astro.slots.has('more') 
+  && (
+    <aside>
+      <h2>More</h2>
+      <slot name="more" />
+    </aside>
+  )
+}
+
+<Fragment set:html={htmlString} />
+
+<Component templateLiteralNameAttribute={`MyNameIs${name}`} />
